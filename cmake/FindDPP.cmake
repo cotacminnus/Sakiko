@@ -1,4 +1,4 @@
-find_path(DPP_INCLUDE_DIR NAMES /usr/include/dpp/dpp.h HINTS ${DPP_ROOT_DIR})
+find_path(DPP_INCLUDE_DIR NAMES dpp/dpp.h HINTS ${DPP_ROOT_DIR})
  
 find_library(DPP_LIBRARIES NAMES dpp "libdpp.so" HINTS ${DPP_ROOT_DIR})
  
