@@ -1,23 +1,36 @@
-#include <dpp/dpp.h>
+#include "saki.h"
 
-const std::string BOT_TOKEN = "add your token here";
+using namespace std;
 
-int main() {
-    dpp::cluster bot(BOT_TOKEN);
+string BOT_TOKEN;
+
+int main(int argc, char* argv[]) {
+    int opt;
+    const char* optstr = "t:";  // t:(token)
+    while((opt = getopt(argc, argv, optstr)) != -1){
+        switch (opt){
+            case 't':
+                BOT_TOKEN = optarg;
+                break;
+            default:
+                break;
+        }
+    }
+
+    dpp::cluster bot(BOT_TOKEN, dpp::i_default_intents | dpp::i_message_content);
 
     bot.on_log(dpp::utility::cout_logger());
 
-    bot.on_slashcommand([](const dpp::slashcommand_t& event) {
-        if (event.command.get_command_name() == "ping") {
-            event.reply("Pong!");
-        }
-    });
+    //名 场 面
+    bot.on_message_create([&bot](const dpp::message_create_t& event) {
 
-    bot.on_ready([&bot](const dpp::ready_t& event) {
-        if (dpp::run_once<struct register_bot_commands>()) {
-            bot.global_command_create(dpp::slashcommand("ping", "Ping pong!", bot.me.id));
+        if (event.msg.content.find("我什么都会做") != std::string::npos) {
+            sleep(1);
+            event.reply(SAKI_SOYO_10, true);
         }
     });
 
     bot.start(dpp::st_wait);
+
+    return 0;
 }
