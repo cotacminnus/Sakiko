@@ -1,7 +1,7 @@
 # Minimum CMake version required, we'll just use the latest version.
 cmake_minimum_required(VERSION 3.22)
 # Project name, version and description
-project(discord-bot VERSION 1.0 DESCRIPTION "Sakichan")
+project(Sakichan)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
