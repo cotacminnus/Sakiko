@@ -1,5 +1,6 @@
 #pragma once
 #include <dpp/dpp.h>
+#include <memory>
 
 #define SAKI_SOYO_0 "真是会虚情假意呢"
 #define SAKI_SOYO_1 "想演奏是你们的自由，你们就请便吧"
@@ -18,19 +19,3 @@
 #define SAKI_SOYO_e "「什么都愿意做」就是这么沉重的话"
 #define SAKI_SOYO_f "做不来的事就别轻易说出口"
 #define SAKI_SOYO_10 "你这个人，满脑子都只想到自己呢"
-
-class Bot{
-    private:
-
-    const std::string handle;
-    const std::string token;
-    dpp::cluster* bot;
-
-    public:
-
-    Bot();
-    Bot(std::string _handle, std::string _token);
-    Bot(Bot& alt);
-    Bot(Bot&& alt);
-    ~Bot();
-};

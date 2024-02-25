@@ -31,6 +31,6 @@ int main(int argc, char* argv[]) {
     });
 
     bot.start(dpp::st_wait);
-
+    
     return 0;
 }
