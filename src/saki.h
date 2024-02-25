@@ -1,6 +1,5 @@
 #pragma once
 #include <dpp/dpp.h>
-#include <memory>
 
 #define SAKI_SOYO_0 "真是会虚情假意呢"
 #define SAKI_SOYO_1 "想演奏是你们的自由，你们就请便吧"
