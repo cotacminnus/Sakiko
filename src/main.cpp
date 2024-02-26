@@ -21,6 +21,14 @@ int main(int argc, char* argv[]) {
 
     bot.on_log(dpp::utility::cout_logger());
 
+    //客服S
+	bot.on_ready([&bot](const dpp::ready_t& event) {
+        /* We don't need the run_once here as we're not registering commands! */
+ 
+        /* Set the bot presence as online and "Playing..."! */
+        bot.set_presence(dpp::presence(dpp::ps_online, dpp::at_custom, "客服S为您服务"));
+    });
+
     //名 场 面
     bot.on_message_create([&bot](const dpp::message_create_t& event) {
 
