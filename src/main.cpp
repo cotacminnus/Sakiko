@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     //名 场 面
     bot.on_message_create([&bot](const dpp::message_create_t& event) {
 
-        if (event.msg.content.find("我什么都会做") != std::string::npos) {
+        if (event.msg.content.find("我什么都会做") != string::npos) {
             sleep(2);
             event.reply(SAKI_SOYO_10, true);
         }
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     //超级加倍
     bot.on_message_create([&bot](const dpp::message_create_t& event) {
 
-        if (event.msg.content.find("さきちゃん") != std::string::npos) {
+        if (event.msg.content.find("さきちゃん") != string::npos) {
             sleep(2);
             event.reply(SAKI_SOYO_0, true);
             sleep(1);
@@ -58,6 +58,23 @@ int main(int argc, char* argv[]) {
             event.send(SAKI_SOYO_cdef);
             sleep(2);
             event.reply(SAKI_SOYO_10, true);
+        }
+    });
+
+    // bot.on_message_create([&bot](const dpp::message_create_t& event){
+    //     pair<dpp::user, dpp::guild_member> localInstance;
+    //     if(find(event.msg.mentions.begin(), event.msg.mentions.end(), localInstance) != event.msg.mentions.end()){
+
+    //     }
+    // });
+
+    //春日影，启动！
+    bot.on_message_create([&bot](const dpp::message_create_t& event){
+        if(event.msg.content.find("春日影") != string::npos){
+            sleep(2);
+            dpp::message msg(event.msg.channel_id, "");
+            msg.add_file("saki_naki.png", dpp::utility::read_file("../resources/sakichan.png"));
+            event.reply(msg);
         }
     });
 
