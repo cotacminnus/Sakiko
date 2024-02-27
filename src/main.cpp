@@ -17,6 +17,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    pid_t pid = getpid();
+    cout << "PID: " << pid << endl;
+
     dpp::cluster bot(BOT_TOKEN, dpp::i_default_intents | dpp::i_message_content);
 
     bot.on_log(dpp::utility::cout_logger());
@@ -33,7 +36,27 @@ int main(int argc, char* argv[]) {
     bot.on_message_create([&bot](const dpp::message_create_t& event) {
 
         if (event.msg.content.find("我什么都会做") != std::string::npos) {
+            sleep(2);
+            event.reply(SAKI_SOYO_10, true);
+        }
+    });
+
+    //名 场 面
+    //超级加倍
+    bot.on_message_create([&bot](const dpp::message_create_t& event) {
+
+        if (event.msg.content.find("さきちゃん") != std::string::npos) {
+            sleep(2);
+            event.reply(SAKI_SOYO_0, true);
             sleep(1);
+            event.send(SAKI_SOYO_123);
+            sleep(1);
+            event.send(SAKI_SOYO_45678);
+            sleep(1);
+            event.send(SAKI_SOYO_9ab);
+            sleep(1);
+            event.send(SAKI_SOYO_cdef);
+            sleep(2);
             event.reply(SAKI_SOYO_10, true);
         }
     });
