@@ -2,28 +2,55 @@
 
 using namespace std;
 
-string BOT_TOKEN;
+ifstream setup_loc;
+map<string, string> globl_str;
 dpp::snowflake ID;
 mutex local_file;
-Staff_S Saki(&local_file);
 
 int main(int argc, char* argv[]) {
     int opt;
-    const char* optstr = "t:";  // t:(token)
+    const char* optstr = "s:";  // t:(token)
     while((opt = getopt(argc, argv, optstr)) != -1){
         switch (opt){
-            case 't':
-                BOT_TOKEN = optarg;
+            case 's':
+                setup_loc.open(optarg);
                 break;
             default:
                 break;
         }
     }
 
+    if(!setup_loc.is_open()){
+        cerr << "Cannot open setup file!" << endl;
+        return 1;
+    }
+    else{
+        string tmp;
+        while(!setup_loc.eof()){
+            if(tmp == "#token"){
+                setup_loc >> tmp;
+                globl_str["TOKEN"] = tmp;
+                cout << "Token: " << tmp << endl;
+            }
+            else if(tmp == "#tousaki_loc"){
+                setup_loc >> tmp;
+                globl_str["TOUSAKI_LOC"] = tmp;
+                cout << "Tousaki location: " << tmp << endl;
+            }
+            else if(tmp == "#unseki_loc"){
+                setup_loc >> tmp;
+                globl_str["UNSEKI_LOC"] = tmp;
+                cout << "Unseki location: " << tmp << endl;
+            }
+        }
+    }
+
     pid_t pid = getpid();
     cout << "PID: " << pid << endl;
+
+    Staff_S Saki(&local_file, globl_str["TOUSAKI_LOC"], globl_str["UNSEKI_LOC"]);
     
-    dpp::cluster bot(BOT_TOKEN, dpp::i_default_intents | dpp::i_message_content);
+    dpp::cluster bot(globl_str["TOKEN"], dpp::i_default_intents | dpp::i_message_content);
 
     //获取dcid
     bot.current_user_get([&bot](const dpp::confirmation_callback_t& cb){
@@ -79,7 +106,8 @@ int main(int argc, char* argv[]) {
         }
     });
 
-    bot.on_message_create([&bot](const dpp::message_create_t& event){
+    //スタッフ仕事
+    bot.on_message_create([&bot, &Saki](const dpp::message_create_t& event){
         if(event.msg.mentions.size() != 0){
             for(auto i : event.msg.mentions){
                 if(i.first.id == ID){
