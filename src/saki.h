@@ -36,8 +36,8 @@
 #define UNSEKI_3 "大祥"
 #define UNSEKI_4 "亲，今天已经抽过签了呢。"
 
-#define TOUSAKI_BENE "投祥成功"
-#define TOUSAKI_MALE "亲，今天已经投过祥了呢。祝你幸福"
+#define TOUSAKI_BENE "投祥成功！"
+#define TOUSAKI_MALE "亲，今天已经投过祥了呢。祝你幸福。"
 
 class Staff_S{
     private:
