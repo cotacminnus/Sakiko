@@ -4,13 +4,14 @@
 
 using namespace std;
 
+bool clean_init = false;
 ifstream setup_loc;
 map<string, string> globl_str;
 dpp::snowflake ID;
 mutex local_file;
-Staff_S Saki(&local_file);
 
-void saki_recycle(string tloc="../resources/tousaki.txt", string uloc="../resources/unseki.txt", int gmt=0){
+//定时器，每天当地时间0点清空历史
+void saki_recycle(string tloc="../resources/tousaki.txt", string uloc="../resources/unsei.txt", int gmt=0){
     if(gmt > 12 || gmt < -12){
         gmt = 0;
     }
@@ -18,8 +19,11 @@ void saki_recycle(string tloc="../resources/tousaki.txt", string uloc="../resour
     tm cur_tm = *gmtime(&cur);
     int sec_til;
     cout << "Current UST time:" << cur_tm.tm_hour << ":" << cur_tm.tm_min << ":" << cur_tm.tm_sec << endl;
+
     while(true){
-        sec_til = -(3600 * gmt) - cur_tm.tm_hour * 3600 - cur_tm.tm_min * 60 - cur_tm.tm_sec;
+        cur = time(nullptr);
+        cur_tm = *gmtime(&cur);
+        sec_til = 86400 - cur_tm.tm_hour * 3600 - cur_tm.tm_min * 60 - cur_tm.tm_sec - (gmt * 3600);
         if(sec_til < 0){
             sec_til += 86400;
         }
@@ -35,10 +39,12 @@ void saki_recycle(string tloc="../resources/tousaki.txt", string uloc="../resour
 
 int main(int argc, char* argv[]) {
     int opt;
-    const char* optstr = "s:";  // t:(token)
+    const char* optstr = "cs:";
     while((opt = getopt(argc, argv, optstr)) != -1){
         switch (opt){
-            case 's':
+            case 'c':   //启动时清空历史
+                clean_init = true;
+            case 's':   //配置文件路径
                 setup_loc.open(optarg);
                 break;
             default:
@@ -51,8 +57,9 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     else{
-        string tmp;
+        string tmp;     //配置存在字典中
         while(!setup_loc.eof()){
+            setup_loc >> tmp;
             if(tmp == "#token"){
                 setup_loc >> tmp;
                 globl_str["TOKEN"] = tmp;
@@ -63,16 +70,31 @@ int main(int argc, char* argv[]) {
                 globl_str["TOUSAKI_LOC"] = tmp;
                 cout << "Tousaki location: " << tmp << endl;
             }
-            else if(tmp == "#unseki_loc"){
+            else if(tmp == "#unsei_loc"){
                 setup_loc >> tmp;
-                globl_str["UNSEKI_LOC"] = tmp;
-                cout << "Unseki location: " << tmp << endl;
+                globl_str["UNSEI_LOC"] = tmp;
+                cout << "Unsei location: " << tmp << endl;
+            }
+            else if(tmp == "#gmt"){
+                setup_loc >> tmp;
+                globl_str["GMT"] = tmp;
+                cout << "GMT: " << tmp << endl;
             }
         }
     }
 
     pid_t pid = getpid();
     cout << "PID: " << pid << endl;
+
+    //计时，每天当地时间0点清空历史
+    thread timer(saki_recycle, globl_str["TOUSAKI_LOC"], globl_str["UNSEI_LOC"], stoi(globl_str["GMT"]));
+    timer.detach();     //你免费了
+    
+    Staff_S Saki(&local_file, globl_str["TOUSAKI_LOC"], globl_str["UNSEI_LOC"]);
+    if(clean_init){     //启动时清空历史
+        Saki.clear_tousaki();
+        Saki.clear_unsei();
+    }
     
     dpp::cluster bot(globl_str["TOKEN"], dpp::i_default_intents | dpp::i_message_content);
 
@@ -98,14 +120,13 @@ int main(int argc, char* argv[]) {
         bot.set_presence(dpp::presence(dpp::ps_online, dpp::at_custom, "客服S为您服务"));
     });
 
-    //名 场 面
-    bot.on_message_create([&bot](const dpp::message_create_t& event) {
-        if(event.msg.mentions.size() != 0){
+    bot.on_message_create([&bot, &Saki](const dpp::message_create_t& event) {
+        if(event.msg.mentions.size() != 0){     //スタッフ仕事
             for(auto i : event.msg.mentions){
                 if(i.first.id == ID){
                     sleep(2);
                     if(event.msg.content.find("今日运势") != string::npos || event.msg.content.find("今日運勢") != string::npos){
-                        pair<bool, string> res = Saki.add_unseki(event.msg.author.id);
+                        pair<bool, string> res = Saki.add_unsei(event.msg.author.id);
                         event.reply(res.second);
                     }
                     else if(event.msg.content.find("投祥") != string::npos){
@@ -119,6 +140,7 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
+        //名 场 面
         else if (event.msg.content.find("我什么都会做") != string::npos || event.msg.content.find("我什麼都會做") != string::npos) {
             sleep(2);
             event.reply(SAKI_SOYO_10, true);
@@ -148,28 +170,7 @@ int main(int argc, char* argv[]) {
         }
     });
 
-    bot.on_message_create([&bot](const dpp::message_create_t& event){
-        if(event.msg.mentions.size() != 0){
-            for(auto i : event.msg.mentions){
-                if(i.first.id == ID){
-                    sleep(2);
-                    if(event.msg.content.find("今日运势") != string::npos || event.msg.content.find("今日運勢") != string::npos){
-                        pair<bool, string> res = Saki.add_unseki(event.msg.author.id);
-                        event.reply(res.second);
-                    }
-                    else if(event.msg.content.find("投祥") != string::npos){
-                        pair<bool, string> res = Saki.add_tousaki(event.msg.author.id);
-                        event.reply(res.second);
-                    }
-                    else{
-                        event.reply("您好，客服S为您服务。");
-                    }
-                    break;
-                }
-            }
-        }
-    });
-
+    //客服小祥，启动！
     bot.start(dpp::st_wait);
     
     return 0;

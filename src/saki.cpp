@@ -5,30 +5,30 @@ using namespace std;
 Staff_S::Staff_S(mutex* lok): lock(lok){
     reseed();
     tousaki_loc = "../resources/tousaki.txt";
-    unseki_loc = "../resources/unseki.txt";
+    unsei_loc = "../resources/unsei.txt";
 
     ofstream tou(tousaki_loc);
     if(!tou.is_open()){
         cerr << "opening tousaki file failed!" << endl;
     }
     tou.close();
-    ofstream uns(unseki_loc);
+    ofstream uns(unsei_loc);
     if(!uns.is_open()){
-        cerr << "opening unseki file failed!" << endl;
+        cerr << "opening unsei file failed!" << endl;
     }
     uns.close();
 }
 
-Staff_S::Staff_S(mutex* lok, string tloc, string uloc): lock(lok), tousaki_loc(tloc), unseki_loc(uloc){
+Staff_S::Staff_S(mutex* lok, string tloc, string uloc): lock(lok), tousaki_loc(tloc), unsei_loc(uloc){
     reseed();
     ofstream tou(tousaki_loc);
     if(!tou.is_open()){
         cerr << "opening tousaki file failed!" << endl;
     }
     tou.close();
-    ofstream uns(unseki_loc);
+    ofstream uns(unsei_loc);
     if(!uns.is_open()){
-        cerr << "opening unseki file failed!" << endl;
+        cerr << "opening unsei file failed!" << endl;
     }
     uns.close();
 }
@@ -51,27 +51,27 @@ pair<bool, string> Staff_S::add_tousaki(dpp::snowflake id){
         return dis;
     }
 }
-pair<bool, string> Staff_S::add_unseki(dpp::snowflake id){
-    bool ret = unseki(id.str());
+pair<bool, string> Staff_S::add_unsei(dpp::snowflake id){
+    bool ret = unsei(id.str());
     pair<bool, string> dis(ret, "");
     if(!ret){
-        dis.second = UNSEKI_4;
+        dis.second = UNSEI_4;
         return dis;
     }
     else{
         lock->lock();
         switch(seed % 4){
         case 0:
-            dis.second = UNSEKI_0;
+            dis.second = UNSEI_0;
             break;
         case 1:
-            dis.second = UNSEKI_1;
+            dis.second = UNSEI_1;
             break;
         case 2:
-            dis.second = UNSEKI_2;
+            dis.second = UNSEI_2;
             break;
         default:
-            dis.second = UNSEKI_3;
+            dis.second = UNSEI_3;
             break;
         }
         lock->unlock();
@@ -86,9 +86,9 @@ void Staff_S::clear_tousaki(){
     reseed();
     lock->unlock();
 }
-void Staff_S::clear_unseki(){
+void Staff_S::clear_unsei(){
     lock->lock();
-    ofstream uns(unseki_loc, ios::trunc);
+    ofstream uns(unsei_loc, ios::trunc);
     uns.close();
     reseed();
     lock->unlock();
@@ -121,11 +121,11 @@ bool Staff_S::tousaki(string id){
     lock->unlock();
     return true;
 }
-bool Staff_S::unseki(string id){
+bool Staff_S::unsei(string id){
     lock->lock();
-    ifstream uns(unseki_loc);
+    ifstream uns(unsei_loc);
     if(!uns.is_open()){
-        cerr << "opening unseki file failed!" << endl;
+        cerr << "opening unsei file failed!" << endl;
         lock->unlock();
         return false;
     }
@@ -141,7 +141,7 @@ bool Staff_S::unseki(string id){
     uns.close();
     reseed();
 
-    ofstream out(unseki_loc, ios::app);
+    ofstream out(unsei_loc, ios::app);
     out << id << endl;
     out.close();
 

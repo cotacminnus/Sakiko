@@ -30,11 +30,11 @@
 #define SAKI_SOYO_9ab "没有人那样拜托你\n这是最后的警告\n今后不要再和我扯上关系了"
 #define SAKI_SOYO_cdef "你是抱着多大的觉悟说出这种话的\n你只不过是一个学生，有办法背负其他人的人生吗\n「什么都愿意做」就是这么沉重的话\n做不来的事就别轻易说出口"
 
-#define UNSEKI_0 "不祥"
-#define UNSEKI_1 "小祥"
-#define UNSEKI_2 "中祥"
-#define UNSEKI_3 "大祥"
-#define UNSEKI_4 "亲，今天已经抽过签了呢。"
+#define UNSEI_0 "不祥"
+#define UNSEI_1 "小祥"
+#define UNSEI_2 "中祥"
+#define UNSEI_3 "大祥"
+#define UNSEI_4 "亲，今天已经抽过签了呢。"
 
 #define TOUSAKI_BENE "投祥成功！"
 #define TOUSAKI_MALE "亲，今天已经投过祥了呢。祝你幸福。"
@@ -45,12 +45,12 @@ class Staff_S{
     int seed;
     //工作日志
     std::string tousaki_loc;
-    std::string unseki_loc;
+    std::string unsei_loc;
 
     std::mutex* lock;
 
     bool tousaki(std::string id);
-    bool unseki(std::string id);
+    bool unsei(std::string id);
 
     public:
     Staff_S(std::mutex* lok);
@@ -58,10 +58,10 @@ class Staff_S{
     ~Staff_S();
     void reseed();
     std::pair<bool, std::string> add_tousaki(dpp::snowflake id);
-    std::pair<bool, std::string> add_unseki(dpp::snowflake id);
+    std::pair<bool, std::string> add_unsei(dpp::snowflake id);
 
     void clear_tousaki();
-    void clear_unseki();
+    void clear_unsei();
 };
 
 #endif
