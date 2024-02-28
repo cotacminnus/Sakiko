@@ -3,6 +3,7 @@
 using namespace std;
 
 string BOT_TOKEN;
+dpp::snowflake ID;
 
 int main(int argc, char* argv[]) {
     int opt;
@@ -21,6 +22,18 @@ int main(int argc, char* argv[]) {
     cout << "PID: " << pid << endl;
 
     dpp::cluster bot(BOT_TOKEN, dpp::i_default_intents | dpp::i_message_content);
+
+    //获取dcid
+    bot.current_user_get([&bot](const dpp::confirmation_callback_t& cb){
+        if(cb.is_error()){
+            cerr << cb.get_error().message << endl;
+        }
+        else{
+            dpp::user temp = get<dpp::user_identified>(cb.value);
+            cout << "Discord ID: " << temp.id << endl;
+            ID = temp.id;
+        }
+    });
 
     bot.on_log(dpp::utility::cout_logger());
 
@@ -72,9 +85,14 @@ int main(int argc, char* argv[]) {
     });
     
     bot.on_message_create([&bot](const dpp::message_create_t& event){
-        pair<dpp::user, dpp::guild_member> localInstance;
-        if(find(event.msg.mentions.begin(), event.msg.mentions.end(), localInstance) != event.msg.mentions.end()){
-
+        if(event.msg.mentions.size() != 0){
+            for(auto i : event.msg.mentions){
+                if(i.first.id == ID){
+                    sleep(2);
+                    event.reply("您好，客服S为您服务。");
+                    break;
+                }
+            }
         }
     });
 
