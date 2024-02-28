@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
                         pair<bool, string> res = Saki.add_unseki(event.msg.author.id);
                         event.reply(res.second);
                     }
-                    if(event.msg.content.find("投祥") != string::npos){
+                    else if(event.msg.content.find("投祥") != string::npos){
                         pair<bool, string> res = Saki.add_tousaki(event.msg.author.id);
                         event.reply(res.second);
                     }
