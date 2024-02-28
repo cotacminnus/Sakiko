@@ -1,4 +1,6 @@
 #include "saki.h"
+#include <thread>
+#include <ctime>
 
 using namespace std;
 
@@ -6,6 +8,30 @@ ifstream setup_loc;
 map<string, string> globl_str;
 dpp::snowflake ID;
 mutex local_file;
+Staff_S Saki(&local_file);
+
+void saki_recycle(string tloc="../resources/tousaki.txt", string uloc="../resources/unseki.txt", int gmt=0){
+    if(gmt > 12 || gmt < -12){
+        gmt = 0;
+    }
+    time_t cur = time(nullptr);
+    tm cur_tm = *gmtime(&cur);
+    int sec_til;
+    cout << "Current UST time:" << cur_tm.tm_hour << ":" << cur_tm.tm_min << ":" << cur_tm.tm_sec << endl;
+    while(true){
+        sec_til = -(3600 * gmt) - cur_tm.tm_hour * 3600 - cur_tm.tm_min * 60 - cur_tm.tm_sec;
+        if(sec_til < 0){
+            sec_til += 86400;
+        }
+        cout << sec_til << " seconds until file clear" << endl;
+        this_thread::sleep_for(chrono::seconds(sec_til));
+        ofstream kill(tloc, ios::trunc);
+        kill.close();
+        kill.open(uloc, ios::trunc);
+        kill.close();
+        sleep(1);
+    }
+}
 
 int main(int argc, char* argv[]) {
     int opt;
@@ -47,8 +73,6 @@ int main(int argc, char* argv[]) {
 
     pid_t pid = getpid();
     cout << "PID: " << pid << endl;
-
-    Staff_S Saki(&local_file, globl_str["TOUSAKI_LOC"], globl_str["UNSEKI_LOC"]);
     
     dpp::cluster bot(globl_str["TOKEN"], dpp::i_default_intents | dpp::i_message_content);
 
@@ -76,8 +100,26 @@ int main(int argc, char* argv[]) {
 
     //名 场 面
     bot.on_message_create([&bot](const dpp::message_create_t& event) {
-
-        if (event.msg.content.find("我什么都会做") != string::npos || event.msg.content.find("我什麼都會做") != string::npos) {
+        if(event.msg.mentions.size() != 0){
+            for(auto i : event.msg.mentions){
+                if(i.first.id == ID){
+                    sleep(2);
+                    if(event.msg.content.find("今日运势") != string::npos || event.msg.content.find("今日運勢") != string::npos){
+                        pair<bool, string> res = Saki.add_unseki(event.msg.author.id);
+                        event.reply(res.second);
+                    }
+                    else if(event.msg.content.find("投祥") != string::npos){
+                        pair<bool, string> res = Saki.add_tousaki(event.msg.author.id);
+                        event.reply(res.second);
+                    }
+                    else{
+                        event.reply("您好，客服S为您服务。");
+                    }
+                    break;
+                }
+            }
+        }
+        else if (event.msg.content.find("我什么都会做") != string::npos || event.msg.content.find("我什麼都會做") != string::npos) {
             sleep(2);
             event.reply(SAKI_SOYO_10, true);
         }
@@ -106,8 +148,7 @@ int main(int argc, char* argv[]) {
         }
     });
 
-    //スタッフ仕事
-    bot.on_message_create([&bot, &Saki](const dpp::message_create_t& event){
+    bot.on_message_create([&bot](const dpp::message_create_t& event){
         if(event.msg.mentions.size() != 0){
             for(auto i : event.msg.mentions){
                 if(i.first.id == ID){
