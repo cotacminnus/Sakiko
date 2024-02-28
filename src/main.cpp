@@ -4,6 +4,8 @@ using namespace std;
 
 string BOT_TOKEN;
 dpp::snowflake ID;
+mutex local_file;
+Staff_S Saki(&local_file);
 
 int main(int argc, char* argv[]) {
     int opt;
@@ -20,7 +22,7 @@ int main(int argc, char* argv[]) {
 
     pid_t pid = getpid();
     cout << "PID: " << pid << endl;
-
+    
     dpp::cluster bot(BOT_TOKEN, dpp::i_default_intents | dpp::i_message_content);
 
     //获取dcid
@@ -48,17 +50,13 @@ int main(int argc, char* argv[]) {
     //名 场 面
     bot.on_message_create([&bot](const dpp::message_create_t& event) {
 
-        if (event.msg.content.find("我什么都会做") != string::npos) {
+        if (event.msg.content.find("我什么都会做") != string::npos || event.msg.content.find("我什麼都會做") != string::npos) {
             sleep(2);
             event.reply(SAKI_SOYO_10, true);
         }
-    });
-
-    //名 场 面
-    //超级加倍
-    bot.on_message_create([&bot](const dpp::message_create_t& event) {
-
-        if (event.msg.content.find("さきちゃん") != string::npos) {
+        //名 场 面
+        //超级加倍
+        else if (event.msg.content.find("さきちゃん") != string::npos) {
             sleep(2);
             event.reply(SAKI_SOYO_0, true);
             sleep(1);
@@ -72,24 +70,31 @@ int main(int argc, char* argv[]) {
             sleep(2);
             event.reply(SAKI_SOYO_10, true);
         }
-    });
-
-    //春日影，启动！
-    bot.on_message_create([&bot](const dpp::message_create_t& event){
-        if(event.msg.content.find("春日影") != string::npos){
+        //春日影，启动！
+        else if(event.msg.content.find("春日影") != string::npos){
             sleep(2);
             dpp::message msg(event.msg.channel_id, "");
             msg.add_file("saki_naki.png", dpp::utility::read_file("../resources/sakichan.png"));
             event.reply(msg);
         }
     });
-    
+
     bot.on_message_create([&bot](const dpp::message_create_t& event){
         if(event.msg.mentions.size() != 0){
             for(auto i : event.msg.mentions){
                 if(i.first.id == ID){
                     sleep(2);
-                    event.reply("您好，客服S为您服务。");
+                    if(event.msg.content.find("今日运势") != string::npos || event.msg.content.find("今日運勢") != string::npos){
+                        pair<bool, string> res = Saki.add_unseki(event.msg.author.id);
+                        event.reply(res.second);
+                    }
+                    if(event.msg.content.find("投祥") != string::npos){
+                        pair<bool, string> res = Saki.add_tousaki(event.msg.author.id);
+                        event.reply(res.second);
+                    }
+                    else{
+                        event.reply("您好，客服S为您服务。");
+                    }
                     break;
                 }
             }

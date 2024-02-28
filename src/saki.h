@@ -1,5 +1,9 @@
 #pragma once
 #include <dpp/dpp.h>
+#include <algorithm>
+#include <iostream>
+#include <thread>
+#include <mutex>
 
 #define SAKI_SOYO_0 "真是会虚情假意呢"
 #define SAKI_SOYO_1 "想演奏是你们的自由，你们就请便吧"
@@ -23,3 +27,37 @@
 #define SAKI_SOYO_45678 "那么那个乐团算什么\n你讲的话和做的事全都互相矛盾\nCRYCHIC已经毁了\n绝对不可能再复活了\n我已经亲手将它结束了"
 #define SAKI_SOYO_9ab "没有人那样拜托你\n这是最后的警告\n今后不要再和我扯上关系了"
 #define SAKI_SOYO_cdef "你是抱着多大的觉悟说出这种话的\n你只不过是一个学生，有办法背负其他人的人生吗\n「什么都愿意做」就是这么沉重的话\n做不来的事就别轻易说出口"
+
+#define UNSEKI_0 "不祥"
+#define UNSEKI_1 "小祥"
+#define UNSEKI_2 "中祥"
+#define UNSEKI_3 "大祥"
+#define UNSEKI_4 "亲，今天已经抽过签了呢。"
+
+#define TOUSAKI_BENE "投祥成功"
+#define TOUSAKI_MALE "亲，今天已经投过祥了呢。祝你幸福"
+
+class Staff_S{
+    private:
+    //随机种子
+    int seed;
+    //工作日志
+    std::string tousaki_loc;
+    std::string unseki_loc;
+
+    mutex* lock;
+
+    bool tousaki(std::string id);
+    bool unseki(std::string id);
+
+    public:
+    Staff_S(mutex* lok);
+    Staff_S(mutex* lok, std::string tdir, std::string udir);
+    ~Staff_S();
+    void reseed();
+    std::pair<bool, std::string> add_tousaki(dpp::snowflake id);
+    std::pair<bool, std::string> add_unseki(dpp::snowflake id);
+
+    void clear_tousaki();
+    void clear_unseki();
+};
