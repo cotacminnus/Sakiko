@@ -1,4 +1,3 @@
-#pragma once
 #include "saki.h"
 
 using namespace std;
@@ -7,7 +6,7 @@ Staff_S::Staff_S(mutex* lok): lock(lok){
     reseed();
     tousaki_loc = "../resources/tousaki.txt";
     unseki_loc = "../resources/unseki.txt";
-    
+
     fstream tou(tousaki_loc);
     if(!tou.is_open()){
         cerr << "opening tousaki file failed!" << endl;
@@ -20,7 +19,7 @@ Staff_S::Staff_S(mutex* lok): lock(lok){
     uns.close();
 }
 
-Staff_S::Staff_S(mutex* lok, string tloc="../resources/tousaki.txt", string uloc="../resources/unseki.txt"): lock(lok), tousaki_loc(tloc), unseki_loc(uloc){
+Staff_S::Staff_S(mutex* lok, string tloc, string uloc): lock(lok), tousaki_loc(tloc), unseki_loc(uloc){
     reseed();
     fstream tou(tousaki_loc);
     if(!tou.is_open()){

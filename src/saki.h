@@ -1,8 +1,10 @@
 #pragma once
+#ifndef SAKI_H
+#define SAKI_H
+
 #include <dpp/dpp.h>
 #include <algorithm>
 #include <iostream>
-#include <thread>
 #include <mutex>
 
 #define SAKI_SOYO_0 "真是会虚情假意呢"
@@ -45,14 +47,14 @@ class Staff_S{
     std::string tousaki_loc;
     std::string unseki_loc;
 
-    mutex* lock;
+    std::mutex* lock;
 
     bool tousaki(std::string id);
     bool unseki(std::string id);
 
     public:
-    Staff_S(mutex* lok);
-    Staff_S(mutex* lok, std::string tdir, std::string udir);
+    Staff_S(std::mutex* lok);
+    Staff_S(std::mutex* lok, std::string tdir, std::string udir);
     ~Staff_S();
     void reseed();
     std::pair<bool, std::string> add_tousaki(dpp::snowflake id);
@@ -61,3 +63,5 @@ class Staff_S{
     void clear_tousaki();
     void clear_unseki();
 };
+
+#endif

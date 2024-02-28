@@ -5,9 +5,13 @@ project(Sakichan)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
+#headers & sources
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE HEADERS "src/*.h")
+
 # Create an executable
 add_executable(${PROJECT_NAME}
-    src/main.cpp
+    ${SOURCES} ${HEADERS}
 )
 
 # Find our pre-installed DPP package (using FindDPP.cmake).
