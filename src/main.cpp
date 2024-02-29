@@ -18,7 +18,7 @@ void saki_recycle(string tloc="../resources/tousaki.txt", string uloc="../resour
     time_t cur = time(nullptr);
     tm cur_tm = *gmtime(&cur);
     int sec_til;
-    cout << "Current UST time:" << cur_tm.tm_hour << ":" << cur_tm.tm_min << ":" << cur_tm.tm_sec << endl;
+    cout << "Current UTC time:" << cur_tm.tm_hour << ":" << cur_tm.tm_min << ":" << cur_tm.tm_sec << endl;
 
     while(true){
         cur = time(nullptr);
@@ -150,13 +150,13 @@ int main(int argc, char* argv[]) {
         else if (event.msg.content.find("さきちゃん") != string::npos) {
             sleep(2);
             event.reply(SAKI_SOYO_0, true);
-            sleep(1);
+            sleep(2);
             event.send(SAKI_SOYO_123);
-            sleep(1);
+            sleep(2);
             event.send(SAKI_SOYO_45678);
-            sleep(1);
+            sleep(2);
             event.send(SAKI_SOYO_9ab);
-            sleep(1);
+            sleep(2);
             event.send(SAKI_SOYO_cdef);
             sleep(2);
             event.reply(SAKI_SOYO_10, true);

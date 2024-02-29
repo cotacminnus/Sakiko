@@ -57,8 +57,8 @@ class Staff_S{
     Staff_S(std::mutex* lok, std::string tdir, std::string udir);
     ~Staff_S();
     void reseed();
-    std::pair<bool, std::string> add_tousaki(dpp::snowflake id);
-    std::pair<bool, std::string> add_unsei(dpp::snowflake id);
+    std::pair<bool, std::string> add_tousaki(const dpp::snowflake& id);
+    std::pair<bool, std::string> add_unsei(const dpp::snowflake& id);
 
     void clear_tousaki();
     void clear_unsei();

@@ -7,12 +7,12 @@ Staff_S::Staff_S(mutex* lok): lock(lok){
     tousaki_loc = "../resources/tousaki.txt";
     unsei_loc = "../resources/unsei.txt";
 
-    ofstream tou(tousaki_loc);
+    ifstream tou(tousaki_loc);
     if(!tou.is_open()){
         cerr << "opening tousaki file failed!" << endl;
     }
     tou.close();
-    ofstream uns(unsei_loc);
+    ifstream uns(unsei_loc);
     if(!uns.is_open()){
         cerr << "opening unsei file failed!" << endl;
     }
@@ -21,12 +21,12 @@ Staff_S::Staff_S(mutex* lok): lock(lok){
 
 Staff_S::Staff_S(mutex* lok, string tloc, string uloc): lock(lok), tousaki_loc(tloc), unsei_loc(uloc){
     reseed();
-    ofstream tou(tousaki_loc);
+    ifstream tou(tousaki_loc);
     if(!tou.is_open()){
         cerr << "opening tousaki file failed!" << endl;
     }
     tou.close();
-    ofstream uns(unsei_loc);
+    ifstream uns(unsei_loc);
     if(!uns.is_open()){
         cerr << "opening unsei file failed!" << endl;
     }
@@ -37,9 +37,10 @@ Staff_S::~Staff_S(){}
 
 void Staff_S::reseed(){
     seed = rand();
+    cout << "New seed: " << seed << endl;
 }
 
-pair<bool, string> Staff_S::add_tousaki(dpp::snowflake id){
+pair<bool, string> Staff_S::add_tousaki(const dpp::snowflake& id){
     bool ret = tousaki(id.str());
     pair<bool, string> dis(ret, "");
     if(ret){
@@ -51,7 +52,7 @@ pair<bool, string> Staff_S::add_tousaki(dpp::snowflake id){
         return dis;
     }
 }
-pair<bool, string> Staff_S::add_unsei(dpp::snowflake id){
+pair<bool, string> Staff_S::add_unsei(const dpp::snowflake& id){
     bool ret = unsei(id.str());
     pair<bool, string> dis(ret, "");
     if(!ret){
