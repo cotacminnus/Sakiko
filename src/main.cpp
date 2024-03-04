@@ -1,6 +1,4 @@
-#include "saki.h"
-#include <thread>
-#include <ctime>
+#include "include.h"
 
 using namespace std;
 

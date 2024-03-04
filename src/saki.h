@@ -1,10 +1,4 @@
 #pragma once
-#ifndef SAKI_H
-#define SAKI_H
-
-#include <dpp/dpp.h>
-#include <algorithm>
-#include <iostream>
 #include <mutex>
 
 #define SAKI_SOYO_0 "真是会虚情假意呢"
@@ -63,5 +57,3 @@ class Staff_S{
     void clear_tousaki();
     void clear_unsei();
 };
-
-#endif
