@@ -123,7 +123,10 @@ int main(int argc, char* argv[]) {
             for(auto i : event.msg.mentions){
                 if(i.first.id == ID){
                     sleep(2);
-                    if(event.msg.content.find("今日运势") != string::npos || event.msg.content.find("今日運勢") != string::npos){
+                    if(event.msg.content.find("贵安") != string::npos || event.msg.content.find("貴安") != string::npos){
+                        event.reply("贵安。");
+                    }
+                    else if(event.msg.content.find("今日运势") != string::npos || event.msg.content.find("今日運勢") != string::npos){
                         pair<bool, string> res = Saki.add_unsei(event.msg.author.id);
                         event.reply(res.second);
                     }

@@ -56,7 +56,7 @@ pair<bool, string> Staff_S::add_unsei(const dpp::snowflake& id){
     bool ret = unsei(id.str());
     pair<bool, string> dis(ret, "");
     if(!ret){
-        dis.second = UNSEI_4;
+        dis.second = UNSEI_U;
         return dis;
     }
     else{

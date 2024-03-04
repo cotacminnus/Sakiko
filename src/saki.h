@@ -28,7 +28,7 @@
 #define UNSEI_1 "小祥"
 #define UNSEI_2 "中祥"
 #define UNSEI_3 "大祥"
-#define UNSEI_4 "亲，今天已经抽过签了呢。"
+#define UNSEI_U "亲，今天已经抽过签了呢。"
 
 #define TOUSAKI_BENE "投祥成功！"
 #define TOUSAKI_MALE "亲，今天已经投过祥了呢。祝你幸福。"
