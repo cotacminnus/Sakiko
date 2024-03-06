@@ -40,7 +40,7 @@ void Staff_S::reseed(){
     cout << "New seed: " << seed << endl;
 }
 
-pair<bool, string> Staff_S::add_tousaki(const dpp::snowflake& id){
+pair<bool, string> Staff_S::add_tousaki(const dpp::snowflake& id){  //记小本本
     bool ret = tousaki(id.str());
     pair<bool, string> dis(ret, "");
     if(ret){
@@ -52,7 +52,7 @@ pair<bool, string> Staff_S::add_tousaki(const dpp::snowflake& id){
         return dis;
     }
 }
-pair<bool, string> Staff_S::add_unsei(const dpp::snowflake& id){
+pair<bool, string> Staff_S::add_unsei(const dpp::snowflake& id){    //记小本本
     bool ret = unsei(id.str());
     pair<bool, string> dis(ret, "");
     if(!ret){
@@ -80,14 +80,14 @@ pair<bool, string> Staff_S::add_unsei(const dpp::snowflake& id){
     }
 }
 
-void Staff_S::clear_tousaki(){
+void Staff_S::clear_tousaki(){  //大赦天下
     lock->lock();
     ofstream tou(tousaki_loc, ios::trunc);
     tou.close();
     reseed();
     lock->unlock();
 }
-void Staff_S::clear_unsei(){
+void Staff_S::clear_unsei(){    //大赦天下
     lock->lock();
     ofstream uns(unsei_loc, ios::trunc);
     uns.close();
@@ -95,7 +95,7 @@ void Staff_S::clear_unsei(){
     lock->unlock();
 }
 
-bool Staff_S::tousaki(string id){
+bool Staff_S::tousaki(string id){   //投祥
     lock->lock();
     ifstream tou(tousaki_loc);
     if(!tou.is_open()){
@@ -122,7 +122,8 @@ bool Staff_S::tousaki(string id){
     lock->unlock();
     return true;
 }
-bool Staff_S::unsei(string id){
+
+bool Staff_S::unsei(string id){     //今日运势
     lock->lock();
     ifstream uns(unsei_loc);
     if(!uns.is_open()){

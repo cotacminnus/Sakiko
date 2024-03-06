@@ -123,6 +123,7 @@ int main(int argc, char* argv[]) {
             for(auto i : event.msg.mentions){
                 if(i.first.id == ID){
                     sleep(2);
+                    //白祥跟定返场
                     if(event.msg.content.find("贵安") != string::npos || event.msg.content.find("貴安") != string::npos){
                         event.reply("贵安。");
                     }
@@ -148,7 +149,7 @@ int main(int argc, char* argv[]) {
         }
         //名 场 面
         //超级加倍
-        else if (event.msg.content.find("さきちゃん") != string::npos) {
+        else if (event.msg.content.find("小祥，你终于来了") != string::npos) {
             sleep(2);
             event.reply(SAKI_SOYO_0, true);
             sleep(2);
@@ -161,6 +162,10 @@ int main(int argc, char* argv[]) {
             event.send(SAKI_SOYO_cdef);
             sleep(2);
             event.reply(SAKI_SOYO_10, true);
+        }
+        //白祥跟定返场
+        else if(event.msg.content.find("贵安") != string::npos || event.msg.content.find("貴安") != string::npos){
+            event.reply("贵安。");
         }
         //春日影，启动！
         else if(event.msg.content.find("春日影") != string::npos){
