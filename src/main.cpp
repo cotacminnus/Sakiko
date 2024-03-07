@@ -2,12 +2,15 @@
 #include "saki.h"
 
 using namespace std;
+using json = nlohmann::json;
 
 bool clean_init = false;
-ifstream setup_loc;
+
 map<string, string> globl_str;
 dpp::snowflake ID;
 mutex local_file;
+
+
 
 //定时器，每天当地时间0点清空历史
 void saki_recycle(string tloc="../resources/tousaki.txt", string uloc="../resources/unsei.txt", int gmt=0){
@@ -38,48 +41,49 @@ void saki_recycle(string tloc="../resources/tousaki.txt", string uloc="../resour
 
 int main(int argc, char* argv[]) {
     int opt;
-    const char* optstr = "cs:";
+    const char* optstr = "c";
     while((opt = getopt(argc, argv, optstr)) != -1){
         switch (opt){
             case 'c':   //启动时清空历史
                 clean_init = true;
-            case 's':   //配置文件路径
-                setup_loc.open(optarg);
-                break;
             default:
                 break;
         }
     }
+
+    ifstream setup_loc("../resources/setup.json");
+    json config;
 
     if(!setup_loc.is_open()){
         cerr << "Cannot open setup file!" << endl;
         return 1;
     }
     else{
-        string tmp;     //配置存在字典中
-        while(!setup_loc.eof()){
-            setup_loc >> tmp;
-            if(tmp == "#token"){
-                setup_loc >> tmp;
-                globl_str["TOKEN"] = tmp;
-                cout << "Token: " << tmp << endl;
-            }
-            else if(tmp == "#tousaki_loc"){
-                setup_loc >> tmp;
-                globl_str["TOUSAKI_LOC"] = tmp;
-                cout << "Tousaki location: " << tmp << endl;
-            }
-            else if(tmp == "#unsei_loc"){
-                setup_loc >> tmp;
-                globl_str["UNSEI_LOC"] = tmp;
-                cout << "Unsei location: " << tmp << endl;
-            }
-            else if(tmp == "#gmt"){
-                setup_loc >> tmp;
-                globl_str["GMT"] = tmp;
-                cout << "GMT: " << tmp << endl;
-            }
-        }
+        // string tmp;     //配置存在字典中
+        // while(!setup_loc.eof()){
+        //     setup_loc >> tmp;
+        //     if(tmp == "#token"){
+        //         setup_loc >> tmp;
+        //         globl_str["TOKEN"] = tmp;
+        //         cout << "Token: " << tmp << endl;
+        //     }
+        //     else if(tmp == "#tousaki_loc"){
+        //         setup_loc >> tmp;
+        //         globl_str["TOUSAKI_LOC"] = tmp;
+        //         cout << "Tousaki location: " << tmp << endl;
+        //     }
+        //     else if(tmp == "#unsei_loc"){
+        //         setup_loc >> tmp;
+        //         globl_str["UNSEI_LOC"] = tmp;
+        //         cout << "Unsei location: " << tmp << endl;
+        //     }
+        //     else if(tmp == "#gmt"){
+        //         setup_loc >> tmp;
+        //         globl_str["GMT"] = tmp;
+        //         cout << "GMT: " << tmp << endl;
+        //     }
+        // }    legacy
+        setup_loc >> config;
     }
 
     pid_t pid = getpid();
@@ -95,7 +99,7 @@ int main(int argc, char* argv[]) {
         Saki.clear_unsei();
     }
     
-    dpp::cluster bot(globl_str["TOKEN"], dpp::i_default_intents | dpp::i_message_content);
+    dpp::cluster bot(config["token"], dpp::i_default_intents | dpp::i_message_content);
 
     //获取dcid
     bot.current_user_get([&bot](const dpp::confirmation_callback_t& cb){
