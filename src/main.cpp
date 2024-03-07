@@ -6,11 +6,8 @@ using json = nlohmann::json;
 
 bool clean_init = false;
 
-map<string, string> globl_str;
 dpp::snowflake ID;
 mutex local_file;
-
-
 
 //定时器，每天当地时间0点清空历史
 void saki_recycle(string tloc="../resources/tousaki.txt", string uloc="../resources/unsei.txt", int gmt=0){
@@ -51,7 +48,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    ifstream setup_loc("../resources/setup.json");
+    ifstream setup_loc("../config/config.json");
     json config;
 
     if(!setup_loc.is_open()){
@@ -59,41 +56,17 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     else{
-        // string tmp;     //配置存在字典中
-        // while(!setup_loc.eof()){
-        //     setup_loc >> tmp;
-        //     if(tmp == "#token"){
-        //         setup_loc >> tmp;
-        //         globl_str["TOKEN"] = tmp;
-        //         cout << "Token: " << tmp << endl;
-        //     }
-        //     else if(tmp == "#tousaki_loc"){
-        //         setup_loc >> tmp;
-        //         globl_str["TOUSAKI_LOC"] = tmp;
-        //         cout << "Tousaki location: " << tmp << endl;
-        //     }
-        //     else if(tmp == "#unsei_loc"){
-        //         setup_loc >> tmp;
-        //         globl_str["UNSEI_LOC"] = tmp;
-        //         cout << "Unsei location: " << tmp << endl;
-        //     }
-        //     else if(tmp == "#gmt"){
-        //         setup_loc >> tmp;
-        //         globl_str["GMT"] = tmp;
-        //         cout << "GMT: " << tmp << endl;
-        //     }
-        // }    legacy
-        setup_loc >> config;
+        setup_loc >> config;    //配置json
     }
 
     pid_t pid = getpid();
     cout << "PID: " << pid << endl;
 
     //计时，每天当地时间0点清空历史
-    thread timer(saki_recycle, globl_str["TOUSAKI_LOC"], globl_str["UNSEI_LOC"], stoi(globl_str["GMT"]));
+    thread timer(saki_recycle, config["tousaki_loc"], config["unsei_loc"], config["gmt"]);
     timer.detach();     //你免费了
     
-    Staff_S Saki(&local_file, globl_str["TOUSAKI_LOC"], globl_str["UNSEI_LOC"]);
+    Staff_S Saki(&local_file, config["tousaki_loc"], config["unsei_loc"]);
     if(clean_init){     //启动时清空历史
         Saki.clear_tousaki();
         Saki.clear_unsei();
@@ -170,6 +143,7 @@ int main(int argc, char* argv[]) {
         }
         //白祥跟定返场
         else if(event.msg.content.find("贵安") != string::npos || event.msg.content.find("貴安") != string::npos){
+            sleep(2);
             event.reply("贵安。");
         }
         //春日影，启动！
@@ -178,6 +152,15 @@ int main(int argc, char* argv[]) {
             dpp::message msg(event.msg.channel_id, "");
             msg.add_file("saki_naki.png", dpp::utility::read_file("../resources/sakichan.png"));
             event.reply(msg);
+        }
+        //お　幸　せ　に
+        else if(event.msg.content.find("祝你幸福") != string::npos || event.msg.content.find("祝妳幸福") != string::npos){
+            sleep(2);
+            event.reply("祝你幸福。");
+        }
+        else if(event.msg.content.find("お幸せに") != string::npos || event.msg.content.find("おしあわせに") != string::npos || event.msg.content.find("オシアワセニ") != string::npos){
+            sleep(2);
+            event.reply("お幸せに。");
         }
     });
 
