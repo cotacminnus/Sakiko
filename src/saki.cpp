@@ -4,29 +4,28 @@ using namespace std;
 
 Staff_S::Staff_S(mutex* lok): lock(lok){
     reseed();
-    tousaki_loc = "../resources/tousaki.txt";
-    unsei_loc = "../resources/unsei.txt";
+    local_dir = "../local/";
 
-    ifstream tou(tousaki_loc);
+    fstream tou(local_dir + "tousaki.txt");
     if(!tou.is_open()){
         cerr << "opening tousaki file failed!" << endl;
     }
     tou.close();
-    ifstream uns(unsei_loc);
+    fstream uns(local_dir + "unsei.txt");
     if(!uns.is_open()){
         cerr << "opening unsei file failed!" << endl;
     }
     uns.close();
 }
 
-Staff_S::Staff_S(mutex* lok, string tloc, string uloc): lock(lok), tousaki_loc(tloc), unsei_loc(uloc){
+Staff_S::Staff_S(mutex* lok, string dir): lock(lok), local_dir(dir){
     reseed();
-    ifstream tou(tousaki_loc);
+    fstream tou(local_dir + "tousaki.txt");
     if(!tou.is_open()){
         cerr << "opening tousaki file failed!" << endl;
     }
     tou.close();
-    ifstream uns(unsei_loc);
+    fstream uns(local_dir + "unsei.txt");
     if(!uns.is_open()){
         cerr << "opening unsei file failed!" << endl;
     }
@@ -82,14 +81,14 @@ pair<bool, string> Staff_S::add_unsei(const dpp::snowflake& id){    //记小本�
 
 void Staff_S::clear_tousaki(){  //大赦天下
     lock->lock();
-    ofstream tou(tousaki_loc, ios::trunc);
+    ofstream tou(local_dir + "tousaki.txt", ios::trunc);
     tou.close();
     reseed();
     lock->unlock();
 }
 void Staff_S::clear_unsei(){    //大赦天下
     lock->lock();
-    ofstream uns(unsei_loc, ios::trunc);
+    ofstream uns(local_dir + "unsei.txt", ios::trunc);
     uns.close();
     reseed();
     lock->unlock();
@@ -97,7 +96,7 @@ void Staff_S::clear_unsei(){    //大赦天下
 
 bool Staff_S::tousaki(string id){   //投祥
     lock->lock();
-    ifstream tou(tousaki_loc);
+    ifstream tou(local_dir + "tousaki.txt");
     if(!tou.is_open()){
         cerr << "opening tousaki file failed!" << endl;
         lock->unlock();
@@ -115,7 +114,7 @@ bool Staff_S::tousaki(string id){   //投祥
     tou.close();
     reseed();
 
-    ofstream out(tousaki_loc, ios::app);
+    ofstream out(local_dir + "tousaki.txt", ios::app);
     out << id << endl;
     out.close();
 
@@ -125,7 +124,7 @@ bool Staff_S::tousaki(string id){   //投祥
 
 bool Staff_S::unsei(string id){     //今日运势
     lock->lock();
-    ifstream uns(unsei_loc);
+    ifstream uns(local_dir + "unsei.txt");
     if(!uns.is_open()){
         cerr << "opening unsei file failed!" << endl;
         lock->unlock();
@@ -143,7 +142,7 @@ bool Staff_S::unsei(string id){     //今日运势
     uns.close();
     reseed();
 
-    ofstream out(unsei_loc, ios::app);
+    ofstream out(local_dir + "unsei.txt", ios::app);
     out << id << endl;
     out.close();
 

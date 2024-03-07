@@ -39,8 +39,7 @@ class Staff_S{
     //随机种子
     int seed;
     //工作日志
-    std::string tousaki_loc;
-    std::string unsei_loc;
+    std::string local_dir;
 
     std::mutex* lock;
 
@@ -49,7 +48,7 @@ class Staff_S{
 
     public:
     Staff_S(std::mutex* lok);
-    Staff_S(std::mutex* lok, std::string tdir, std::string udir);
+    Staff_S(std::mutex* lok, std::string loc_dir);
     ~Staff_S();
     void reseed();
     std::pair<bool, std::string> add_tousaki(const dpp::snowflake& id);
