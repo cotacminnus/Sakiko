@@ -109,7 +109,9 @@ int main(int argc, char* argv[]) {
                         }
                         else if(event.msg.content.find("今日运势") != string::npos || event.msg.content.find("今日運勢") != string::npos){
                             pair<bool, string> res = Saki.add_unsei(event.msg.author.id);
-                            event.reply(res.second);
+                            dpp::message msg(event.msg.channel_id, "");
+                            msg.add_file(res.second, dpp::utility::read_file("../resources/" + res.second));
+                            event.reply(msg);
                         }
                         else if(event.msg.content.find("投祥") != string::npos){
                             pair<bool, string> res = Saki.add_tousaki(event.msg.author.id);
@@ -152,7 +154,7 @@ int main(int argc, char* argv[]) {
             else if(event.msg.content.find("春日影") != string::npos){
                 sleep(2);
                 dpp::message msg(event.msg.channel_id, "");
-                msg.add_file("saki_naki.png", dpp::utility::read_file("../resources/sakichan.png"));
+                msg.add_file("saki_naki.png", dpp::utility::read_file("../resources/saki_naki.png"));
                 event.reply(msg);
             }
             //お　幸　せ　に

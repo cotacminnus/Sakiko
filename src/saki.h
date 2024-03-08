@@ -25,10 +25,10 @@
 #define SAKI_SOYO_9ab "没有人那样拜托你\n这是最后的警告\n今后不要再和我扯上关系了"
 #define SAKI_SOYO_cdef "你是抱着多大的觉悟说出这种话的\n你只不过是一个学生，有办法背负其他人的人生吗\n「什么都愿意做」就是这么沉重的话\n做不来的事就别轻易说出口"
 
-#define UNSEI_0 "不祥"
-#define UNSEI_1 "小祥"
-#define UNSEI_2 "中祥"
-#define UNSEI_3 "大祥"
+#define UNSEI_0 "fusaki.png"
+#define UNSEI_1 "shousaki.png"
+#define UNSEI_2 "chusaki.png"
+#define UNSEI_3 "daisaki.png"
 #define UNSEI_U "亲，今天已经抽过签了呢。"
 
 #define TOUSAKI_BENE "投祥成功！"
