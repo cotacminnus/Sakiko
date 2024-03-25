@@ -1,4 +1,4 @@
 #do not include
 build/
-config/
+config/*.json
 local/*.txt
