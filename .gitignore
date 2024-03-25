@@ -1,2 +1,4 @@
-local/tousaki.txt
-local/unsei.txt
+#do not include
+build/
+config/
+local/*.txt
