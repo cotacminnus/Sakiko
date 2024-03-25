@@ -3,9 +3,9 @@
 
 # 使用方法
 ## 配置
-`mkdir config && touch config/config.json`
+`touch config/config.json`
 
-在工作目录里创建`config/`，并在里面创建`config.json`。
+在`config/`里面创建`config.json`。
 
 配置方法如下：
 
@@ -28,4 +28,5 @@
 
 `./Sakichan`
 
+### 参数
 `-c`：清空本地记录。
