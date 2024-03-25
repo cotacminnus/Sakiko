@@ -11,8 +11,8 @@
 
 ```
 {
-    "token": <bot_token_here>,
-    "gmt": <-12 ~ 12>,
+    "token": /*bot_token_here*/,
+    "gmt": /*-12 ~ 12*/,
     "local_dir": "../local/"
 }
 ```
