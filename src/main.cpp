@@ -29,7 +29,7 @@ void saki_recycle(string loc, int gmt=0){
         }
         cout << sec_til << " seconds until file clear" << endl;
         this_thread::sleep_for(chrono::seconds(sec_til));
-        ofstream kill(loc + "tousaki.txt", ios::trunc);
+        ofstream kill(loc + "tousaki.txt", ios::trunc); //清空
         kill.close();
         kill.open(loc + "unsei.txt", ios::trunc);
         kill.close();
